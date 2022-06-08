@@ -865,6 +865,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 
 	w += 2; /* 1px padding on both sides */
 	ret = x = m->ww - w;
+  x = m->ww-w - getsystraywidth();
 
 	drw_setscheme(drw, scheme[LENGTH(colors)]);
 	drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
@@ -880,7 +881,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 
 			text[i] = '\0';
 			w = TEXTW(text) - lrpad;
-			drw_text(drw, x, 0, w, bh, lrpad/2-2, text, 0);
+			drw_text(drw, x, 0, w, bh, 0, text, 0);
 
 			x += w;
 
