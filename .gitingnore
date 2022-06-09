@@ -53,7 +53,8 @@ dkms.conf
 
 
 
-*.rej
-*.orig
-/dwm
+./*.rej
+./*.orig
+./dwm
+./*.o
 
