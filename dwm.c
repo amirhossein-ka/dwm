@@ -1930,7 +1930,7 @@ setup(void)
 	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
 		die("no fonts could be loaded.");
 	lrpad = drw->fonts->h;
-	bh = drw->fonts->h + 2;
+	bh = drw->fonts->h + 2 + user_bh;
 	updategeom();
 	/* init atoms */
 	utf8string = XInternAtom(dpy, "UTF8_STRING", False);
@@ -1964,7 +1964,7 @@ setup(void)
 	scheme[LENGTH(colors)] = drw_scm_create(drw, colors[0], 3);
 	for (i = 0; i < LENGTH(colors); i++)
 		scheme[i] = drw_scm_create(drw, colors[i], 3);
-  tagscheme = ecalloc(LENGTH(tagsel), sizeof(Clr *));
+    tagscheme = ecalloc(LENGTH(tagsel), sizeof(Clr *));
   for (i = 0; i < LENGTH(tagsel); i++)               	/* init system tray */
 	  tagscheme[i] = drw_scm_create(drw, tagsel[i], 2);	updatesystray();
 	/* init bars */

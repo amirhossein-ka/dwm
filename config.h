@@ -1,11 +1,11 @@
 /* See LICENSE file for copyright and license details. */
 
+#include <X11/XF86keysym.h>
+#define PrintScreenDWM	    0x0000ff61
 /* appearance */
 static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const unsigned int gappx     = 5;        /* gaps between windows */
-// static const unsigned int snap      = 32;       /* snap pixel */
-// static const int showbar            = 1;        /* 0 means no bar */
-// static const int topbar             = 1;        /* 0 means bottom bar */
+static const int user_bh            = 2;        /* 2 is the default spacing around the bar's font */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft = 0;   	/* 0: systray in the right corner, >0: systray on left of status text */
@@ -14,7 +14,7 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;     /* 0 means no bar */
 static const int topbar             = 1;     /* 0 means bottom bar */
-static const char *fonts[]          = { "Jetbrains Mono:size=12" };
+static const char *fonts[]          = { "DroidSansMono Nerd Font:size=13", "Jetbrains Mono:size=13" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -32,7 +32,7 @@ static const char *const autostart[] = {
   "daemon", NULL,
   "picom", "--experimental-backends", "--config", "/home/amir/.config/picom/dwm.conf", "-b", NULL,
   "redshift", "-x", NULL,
-  "redshift", "-O", "4000", NULL,
+  "redshift", "-O4000", NULL,
 	NULL /* terminate */
 };
 
@@ -41,15 +41,13 @@ static const char *tags[] = { "", "", "", "", "", "", "" };
 static const char *defaulttagapps[] = { "st", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
 static const char *tagsel[][2] = {
-	{ "#ffffff", "#ff0000" },
-	{ "#ffffff", "#ff7f00" },
-	{ "#000000", "#ffff00" },
-	{ "#000000", "#00ff00" },
-	{ "#ffffff", "#0000ff" },
-	{ "#ffffff", "#4b0082" },
-	{ "#ffffff", "#9400d3" },
-	{ "#000000", "#ffffff" },
-	{ "#ffffff", "#000000" },
+	{ "#19f2d5", "#1e222a" },
+	{ "#2AABEE", "#1e222a" },
+	{ "#E66000", "#1e222a" },
+	{ "#19f2d5", "#1e222a" },
+	{ "#25a841", "#1e222a" },
+	{ "#451499", "#1e222a" },
+	{ "#19f2d5", "#1e222a" },
 };
 
 static const Rule rules[] = {
@@ -93,10 +91,29 @@ static const char *termcmd[]  = { "st", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
+// volume
+static const char *voldown[] = {"amixer", "-c", "0", "sset", "Master", "5%-", NULL};
+static const char *volup[] = {"amixer", "-c", "0", "sset", "Master", "5%+", NULL};
+static const char *volmute[] = {"amixer", "-c", "0", "sset", "Master", "toggle", NULL};
+
+// screenshot
+static const char *maim[] = {"maim", "-s","|", "xclip", "-selection", "clipboard", "-t", "image/png", NULL};
+
+static const char *mpdNext[] = {"mpc", "next", NULL};
+static const char *mpdPerv[] = {"mpc", "prev", NULL};
+static const char *mpdPause[] = {"mpc", "toggle", NULL}; 
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+  {ControlMask,                 XK_Print,  spawn,          SHCMD(maim)},
+  {ControlMask,                 XK_p,      spawn,          {.v = mpdPause }},
+  {ControlMask,                 XK_n,      spawn,          {.v = mpdNext}},
+  {ControlMask,                 XK_m,      spawn,          {.v = mpdPerv}},
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+  {0,                             XF86XK_AudioLowerVolume,   spawn, {.v = voldown} },
+  {0,                             XF86XK_AudioRaiseVolume,   spawn, {.v = volup} },
+  {0,                             XF86XK_AudioMute,          spawn, {.v = volmute } },
 	{ MODKEY,                       XK_s,      spawndefault,   {0} },
 	{ MODKEY,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
